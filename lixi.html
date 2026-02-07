@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hái Lộc Đầu Xuân 2026</title>
+    <style>
+        /* --- CSS STYLING --- */
+        body {
+            background-color: #8E0E00; 
+            background-image: linear-gradient(to right, #8E0E00, #1F1C18);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #FFD700; 
+            text-align: center;
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h1 {
+            font-size: 3rem;
+            margin-top: 20px;
+            text-transform: uppercase;
+            text-shadow: 2px 2px 4px #000;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            color: #fff;
+        }
+
+        /* Khu vực chứa bao lì xì */
+        .lixi-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            max-width: 1000px;
+            padding: 20px;
+        }
+
+        /* Thiết kế bao lì xì */
+        .lixi-box {
+            width: 100px;
+            height: 140px;
+            background: #D90429;
+            border: 2px solid #FFD700;
+            border-radius: 10px;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.3s ease;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 2rem;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        }
+
+        /* Trang trí trên bao */
+        .lixi-box::after {
+            content: "🧧";
+            font-size: 3rem;
+        }
+
+        /* Hiệu ứng rung lắc khi di chuột */
+        .lixi-box:hover {
+            transform: scale(1.1) rotate(5deg);
+            background: #EF233C;
+        }
+
+        /* Trạng thái đã mở */
+        .lixi-box.opened {
+            background: #555;
+            border-color: #999;
+            cursor: not-allowed;
+            opacity: 0.6;
+            transform: none;
+        }
+        .lixi-box.opened::after {
+            content: "❌";
+            filter: grayscale(100%);
+        }
+
+        /* --- POPUP KẾT QUẢ --- */
+        .modal {
+            display: none; 
+            position: fixed; 
+            z-index: 100; 
+            left: 0;
+            top: 0;
+            width: 100%; 
+            height: 100%; 
+            background-color: rgba(0,0,0,0.8);
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background-color: #fff;
+            color: #D90429;
+            padding: 40px;
+            border: 5px solid #FFD700;
+            border-radius: 20px;
+            text-align: center;
+            width: 80%;
+            max-width: 500px;
+            animation: zoomIn 0.5s;
+            position: relative;
+        }
+
+        @keyframes zoomIn {
+            from {transform: scale(0)} 
+            to {transform: scale(1)}
+        }
+
+        .prize-text {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin: 20px 0;
+            color: #D90429;
+        }
+        
+        .wish-text {
+            font-size: 1.2rem;
+            color: #333;
+            font-style: italic;
+        }
+
+        .close-btn {
+            background-color: #D90429;
+            color: white;
+            padding: 10px 30px;
+            border: none;
+            border-radius: 5px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        .close-btn:hover {
+            background-color: #b00220;
+        }
+
+        /* Nút reset ẩn (để ở góc dưới) */
+        .reset-btn {
+            margin-top: auto;
+            margin-bottom: 20px;
+            background: transparent;
+            border: 1px solid #555;
+            color: #555;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>🌸 Lì Xì Đầu Năm 2026 🌸</h1>
+    <p class="subtitle">Download code lên github của HoanIT nhé!</p>
+
+    <div class="lixi-container" id="lixiContainer">
+        </div>
+
+    <div id="resultModal" class="modal">
+        <div class="modal-content">
+            <h2>🎉 CHÚC MỪNG NĂM MỚI 🎉</h2>
+            <p>Bạn đã nhận được:</p>
+            <div class="prize-text" id="prizeValue">100k</div>
+            <p class="wish-text" id="wishValue">An khang thịnh vượng - Vạn sự như ý</p>
+            <button class="close-btn" onclick="closeModal()">Nhận Lộc</button>
+        </div>
+    </div>
+
+    <button class="reset-btn" onclick="resetGame()">Cài đặt lại (Admin)</button>
+
+    <script>
+        /* --- CẤU HÌNH GIẢI THƯỞNG --- */
+        // Bạn chỉnh sửa số lượng và số tiền tại đây
+        const prizeConfig = [
+            { value: "500.000 VNĐ", count: 1, wish: "Tiền vào như nước, tiền ra nhỏ giọt!" },
+            { value: "200.000 VNĐ", count: 3, wish: "Sự nghiệp thăng tiến, mã đáo thành công!" },
+            { value: "100.000 VNĐ", count: 5, wish: "Tấn tài tấn lộc, công thành danh toại!" },
+            { value: "50.000 VNĐ", count: 10, wish: "Hay ăn chóng lớn, học hành giỏi giang!" },
+            { value: "20.000 VNĐ", count: 15, wish: "Vui vẻ, trẻ khỏe, yêu đời!" },
+            { value: "1 tờ vé số", count: 5, wish: "Biết đâu chiều nay thành tỷ phú!" },
+            { value: "Một tràng pháo tay", count: 5, wish: "Chúc bạn may mắn lần sau!" }
+        ];
+
+        let availablePrizes = [];
+        const totalEnvelopes = 30; // Tổng số bao lì xì hiển thị trên màn hình
+
+        // Hàm khởi tạo game
+        function initGame() {
+            const container = document.getElementById('lixiContainer');
+            container.innerHTML = '';
+            
+            // 1. Tạo danh sách giải thưởng dựa trên config (làm phẳng mảng)
+            availablePrizes = [];
+            prizeConfig.forEach(item => {
+                for(let i = 0; i < item.count; i++) {
+                    availablePrizes.push({ value: item.value, wish: item.wish });
+                }
+            });
+
+            // 2. Tạo các bao lì xì giao diện
+            // Nếu số giải thưởng ít hơn số bao hiển thị, các bao còn lại sẽ là "Chúc may mắn" (hoặc rỗng)
+            for (let i = 0; i < totalEnvelopes; i++) {
+                let box = document.createElement('div');
+                box.className = 'lixi-box';
+                box.setAttribute('onclick', `openLixi(this, ${i})`);
+                container.appendChild(box);
+            }
+        }
+
+        // Hàm mở bao lì xì
+        function openLixi(element, index) {
+            if (element.classList.contains('opened')) return; // Không mở lại bao đã mở
+
+            if (availablePrizes.length === 0) {
+                alert("Đã hết lộc rồi! Chúc mừng năm mới!");
+                return;
+            }
+
+            // Random chọn 1 giải trong kho
+            const randomIndex = Math.floor(Math.random() * availablePrizes.length);
+            const selectedPrize = availablePrizes[randomIndex];
+
+            // Xóa giải đó khỏi kho (để không ai bốc trúng nữa)
+            availablePrizes.splice(randomIndex, 1);
+
+            // Hiển thị kết quả
+            document.getElementById('prizeValue').innerText = selectedPrize.value;
+            document.getElementById('wishValue').innerText = selectedPrize.wish;
+            
+            // Hiệu ứng UI
+            element.classList.add('opened');
+            
+            // Hiện Popup
+            document.getElementById('resultModal').style.display = 'flex';
+            
+            // Hiệu ứng pháo hoa (nếu muốn thêm thư viện ngoài, ở đây dùng alert đơn giản)
+        }
+
+        function closeModal() {
+            document.getElementById('resultModal').style.display = 'none';
+        }
+
+        // Reset game (dành cho Admin)
+        function resetGame() {
+            if(confirm("Bạn có chắc muốn reset lại toàn bộ giải thưởng không?")) {
+                initGame();
+            }
+        }
+
+        // Chạy lần đầu
+        initGame();
+
+    </script>
+</body>
+</html>
